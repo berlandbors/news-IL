@@ -50,13 +50,18 @@
         <iframe id="newsFrame" src="" frameborder="0"></iframe>
     </main>
 
-    <script>
-        const loadNewsBtn = document.getElementById('loadNews');
-        const newsFrame = document.getElementById('newsFrame');
+     <script> 
+        const loadNewsBtn = document.getElementById('loadNews'); 
+        const newsFrame = document.getElementById('newsFrame'); 
 
-        loadNewsBtn.addEventListener('click', () => {
-            newsFrame.src = "https://news.startpage.co.il/russian/#";
+        loadNewsBtn.addEventListener('click', () => { 
+            newsFrame.src = "https://news.startpage.co.il/russian/#"; 
         });
-    </script>
+
+        // Автоматическое обновление страницы каждые 5 минут
+        setInterval(() => {
+            location.reload();
+        }, 300000);
+    </script> 
 </body>
 </html>
