@@ -39,32 +39,62 @@
             margin-top: 1rem;
             border: 1px solid #ccc;
         }
+
+        #loadingMessage {
+            text-align: center;
+            color: #333;
+            font-size: 1rem;
+            display: none;
+        }
     </style>
 </head>
 <body>
     <header>
         <h1>Новости Израиля онлайн</h1>
-  <h3>страница обновляется через каждые 5 мин.</h3>
-<p>berlandbor</p>
-
+        <h3>страница обновляется через каждые 5 мин.</h3>
+        <p>berlandbor</p>
     </header>
     <main>
         <button id="loadNews">Загрузить новости</button>
+        <p id="loadingMessage">Загрузка новостей...</p>
         <iframe id="newsFrame" src="" frameborder="0"></iframe>
     </main>
 
-     <script> 
-        const loadNewsBtn = document.getElementById('loadNews'); 
-        const newsFrame = document.getElementById('newsFrame'); 
+    <script>
+        // Запуск кода после загрузки DOM
+        document.addEventListener('DOMContentLoaded', () => {
+            const loadNewsBtn = document.getElementById('loadNews');
+            const newsFrame = document.getElementById('newsFrame');
+            const loadingMessage = document.getElementById('loadingMessage');
 
-        loadNewsBtn.addEventListener('click', () => { 
-            newsFrame.src = "https://news.startpage.co.il/russian/#"; 
+            // Функция для загрузки новостей
+            const loadNews = () => {
+                showLoadingMessage(true);
+                try {
+                    newsFrame.src = "https://news.startpage.co.il/russian/#";
+                    newsFrame.onload = () => {
+                        showLoadingMessage(false); // Скрыть сообщение после загрузки
+                    };
+                } catch (error) {
+                    console.error('Ошибка загрузки новостей:', error);
+                    alert('Не удалось загрузить новости. Попробуйте позже.');
+                    showLoadingMessage(false);
+                }
+            };
+
+            // Функция для отображения/скрытия сообщения о загрузке
+            const showLoadingMessage = (isVisible) => {
+                loadingMessage.style.display = isVisible ? 'block' : 'none';
+            };
+
+            // Добавление обработчика событий на кнопку
+            loadNewsBtn.addEventListener('click', loadNews);
+
+            // Автоматическое обновление страницы каждые 5 минут
+            setInterval(() => {
+                location.reload();
+            }, 300000); // 5 минут = 300000 мс
         });
-
-        // Автоматическое обновление страницы каждые 5 минут
-        setInterval(() => {
-            location.reload();
-        }, 300000);
-    </script> 
+    </script>
 </body>
 </html>
