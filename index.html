@@ -20,11 +20,10 @@
         @keyframes neon-flicker {
             0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
                 text-shadow:
-                    0 0 5px #fff,
-                    0 0 10px #fff,
-                    0 0 20px #00f3ff,
-                    0 0 40px #00f3ff,
-                    0 0 80px #00f3ff;
+                    0 0 5px #f0f0f0,
+                    0 0 10px #f0f0f0,
+                    0 0 20px #98c998,
+                    0 0 40px #98c998;
                 opacity: 1;
             }
             20%, 24%, 55% {
@@ -34,13 +33,13 @@
         }
 
         @keyframes glow-pulse {
-            0%, 100% { box-shadow: 0 0 8px #00f3ff, 0 0 20px #00f3ff, inset 0 0 8px rgba(0,243,255,0.1); }
-            50%       { box-shadow: 0 0 16px #00f3ff, 0 0 40px #00f3ff, inset 0 0 16px rgba(0,243,255,0.2); }
+            0%, 100% { box-shadow: 0 0 8px #7ec8e3, 0 0 20px #7ec8e3, inset 0 0 8px rgba(126,200,227,0.1); }
+            50%       { box-shadow: 0 0 16px #7ec8e3, 0 0 40px #7ec8e3, inset 0 0 16px rgba(126,200,227,0.2); }
         }
 
         @keyframes btn-glow-pulse {
-            0%, 100% { box-shadow: 0 0 6px #ff006e, 0 0 18px #ff006e, inset 0 0 6px rgba(255,0,110,0.1); }
-            50%       { box-shadow: 0 0 14px #ff006e, 0 0 36px #ff006e, inset 0 0 14px rgba(255,0,110,0.2); }
+            0%, 100% { box-shadow: 0 0 6px #e8d99f, 0 0 18px #e8d99f, inset 0 0 6px rgba(232,217,159,0.1); }
+            50%       { box-shadow: 0 0 14px #e8d99f, 0 0 36px #e8d99f, inset 0 0 14px rgba(232,217,159,0.2); }
         }
 
         @keyframes scanlines {
@@ -66,7 +65,7 @@
             margin: 0;
             padding: 0;
             background-color: #0a0a0a;
-            color: #00f3ff;
+            color: #f0f0f0;
             min-height: 100vh;
             overflow-x: hidden;
         }
@@ -77,8 +76,8 @@
             position: fixed;
             inset: 0;
             background-image:
-                linear-gradient(rgba(0,243,255,0.04) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0,243,255,0.04) 1px, transparent 1px);
+                linear-gradient(rgba(152,201,152,0.04) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(152,201,152,0.04) 1px, transparent 1px);
             background-size: 40px 40px;
             pointer-events: none;
             z-index: 0;
@@ -107,8 +106,8 @@
             background: linear-gradient(180deg, #0d0d1a 0%, #0a0a0a 100%);
             text-align: center;
             padding: 2rem 1rem 1.5rem;
-            border-bottom: 1px solid #00f3ff;
-            box-shadow: 0 4px 30px rgba(0,243,255,0.25);
+            border-bottom: 1px solid #7ec8e3;
+            box-shadow: 0 4px 30px rgba(126,200,227,0.2);
             animation: fade-in 0.8s ease both;
             overflow: hidden;
         }
@@ -116,7 +115,7 @@
         header::before {
             content: '╔══════════════════════════════════════════════╗';
             display: block;
-            color: rgba(0,243,255,0.25);
+            color: rgba(152,201,152,0.3);
             font-size: 0.75rem;
             letter-spacing: 0;
             margin-bottom: 0.5rem;
@@ -127,7 +126,7 @@
         header::after {
             content: '╚══════════════════════════════════════════════╝';
             display: block;
-            color: rgba(0,243,255,0.25);
+            color: rgba(152,201,152,0.3);
             font-size: 0.75rem;
             margin-top: 0.5rem;
             overflow: hidden;
@@ -139,7 +138,7 @@
             position: relative;
             font-family: 'VT323', 'Courier New', monospace;
             font-size: clamp(1.8rem, 5vw, 3rem);
-            color: #00f3ff;
+            color: #f0f0f0;
             letter-spacing: 0.08em;
             margin: 0 0 0.4rem;
             animation: neon-flicker 6s infinite;
@@ -155,13 +154,13 @@
         }
 
         .glitch-title::before {
-            color: #ff006e;
+            color: #e8d99f;
             animation: glitch 4s infinite;
             animation-delay: 0.5s;
         }
 
         .glitch-title::after {
-            color: #00ff41;
+            color: #98c998;
             animation: glitch 4s infinite reverse;
             animation-delay: 1s;
         }
@@ -169,15 +168,15 @@
         header h3 {
             font-family: 'Share Tech Mono', monospace;
             font-size: 0.85rem;
-            color: #ffd700;
+            color: #e8d99f;
             letter-spacing: 0.12em;
             margin: 0.2rem 0;
-            text-shadow: 0 0 8px #ffd700;
+            text-shadow: 0 0 8px #e8d99f;
         }
 
         header p {
             font-size: 0.75rem;
-            color: rgba(0,243,255,0.5);
+            color: #7ec8e3;
             margin: 0.3rem 0 0;
             letter-spacing: 0.2em;
         }
@@ -197,8 +196,8 @@
             margin: 1.5rem auto;
             padding: 0.7rem 2rem;
             background: transparent;
-            color: #ff006e;
-            border: 1px solid #ff006e;
+            color: #98c998;
+            border: 1px solid #e8d99f;
             font-family: 'Share Tech Mono', 'Courier New', monospace;
             font-size: 1rem;
             letter-spacing: 0.12em;
@@ -210,27 +209,27 @@
 
         #loadNews::before {
             content: '> ';
-            color: #ffd700;
+            color: #e8d99f;
         }
 
         #loadNews:hover,
         #loadNews:focus {
-            background: rgba(255,0,110,0.12);
-            color: #fff;
+            background: rgba(126,200,227,0.08);
+            color: #7ec8e3;
             letter-spacing: 0.2em;
             outline: none;
-            box-shadow: 0 0 20px #ff006e, 0 0 40px #ff006e;
+            box-shadow: 0 0 20px #7ec8e3, 0 0 40px #7ec8e3;
         }
 
         /* ── Loading message ───────────────────────────────────────────── */
         #loadingMessage {
             text-align: center;
-            color: #00ff41;
+            color: #e8d99f;
             font-family: 'Share Tech Mono', monospace;
             font-size: 0.95rem;
             display: none;
             letter-spacing: 0.15em;
-            text-shadow: 0 0 8px #00ff41;
+            text-shadow: 0 0 8px #e8d99f;
             animation: neon-flicker 2s infinite;
         }
 
@@ -243,7 +242,7 @@
         .iframe-wrapper {
             position: relative;
             margin-top: 1.2rem;
-            border: 1px solid #00f3ff;
+            border: 1px solid #7ec8e3;
             animation: glow-pulse 3s ease-in-out infinite;
         }
 
@@ -254,10 +253,10 @@
             left: 1rem;
             background: #0a0a0a;
             padding: 0 0.5rem;
-            color: #00f3ff;
+            color: #7ec8e3;
             font-size: 0.7rem;
             letter-spacing: 0.2em;
-            text-shadow: 0 0 8px #00f3ff;
+            text-shadow: 0 0 8px #7ec8e3;
             z-index: 2;
         }
 
