@@ -57,6 +57,18 @@
             50%       { opacity: 0; }
         }
 
+        @keyframes flicker {
+            0%, 100% { opacity: 1; }
+            50%       { opacity: 0.7; }
+        }
+
+        @keyframes dots {
+            0%, 20%   { content: ''; }
+            40%       { content: '.'; }
+            60%       { content: '..'; }
+            80%, 100% { content: '...'; }
+        }
+
         /* ── Base ──────────────────────────────────────────────────────── */
         *, *::before, *::after { box-sizing: border-box; }
 
@@ -257,19 +269,70 @@
 
         /* ── Loading message ───────────────────────────────────────────── */
         #loadingMessage {
-            text-align: center;
-            color: #e8d99f;
-            font-family: 'Share Tech Mono', monospace;
-            font-size: 0.95rem;
             display: none;
-            letter-spacing: 0.15em;
-            text-shadow: 0 0 8px #e8d99f;
-            animation: neon-flicker 2s infinite;
         }
 
-        #loadingMessage::after {
-            content: '_';
-            animation: cursor-blink 1s step-end infinite;
+        /* ── Loading overlay ───────────────────────────────────────────── */
+        .loading-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.85);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .progress-container {
+            width: 70%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .loading-text {
+            font-family: 'Courier New', Consolas, monospace;
+            font-size: 18px;
+            color: #98c998;
+            letter-spacing: 0.15em;
+            margin-bottom: 0.8rem;
+            text-shadow: 0 0 8px #98c998;
+            animation: flicker 1.5s infinite;
+        }
+
+        .dots::after {
+            content: '';
+            animation: dots 1.5s infinite;
+        }
+
+        .progress-bar-bg {
+            width: 100%;
+            height: 24px;
+            background: #111;
+            border: 1px solid #98c998;
+            box-shadow: 0 0 8px rgba(152,201,152,0.3);
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #98c998, #7ec8e3);
+            box-shadow:
+                0 0 10px #98c998,
+                0 0 20px #98c998,
+                inset 0 0 10px rgba(152,201,152,0.5);
+            transition: width 0.05s linear;
+        }
+
+        .progress-percent {
+            margin-top: 0.5rem;
+            font-family: 'Courier New', Consolas, monospace;
+            font-size: 14px;
+            color: #f0f0f0;
+            letter-spacing: 0.1em;
         }
 
         /* ── iframe ────────────────────────────────────────────────────── */
@@ -318,6 +381,15 @@
         <p id="loadingMessage">Загрузка новостей</p>
         <div class="iframe-wrapper">
             <iframe id="newsFrame" src="" title="Лента новостей Израиля"></iframe>
+            <div class="loading-overlay" id="loadingOverlay">
+                <div class="progress-container">
+                    <div class="loading-text">Loading<span class="dots"></span></div>
+                    <div class="progress-bar-bg">
+                        <div class="progress-bar-fill" id="progressBar"></div>
+                    </div>
+                    <div class="progress-percent" id="progressPercent">0%</div>
+                </div>
+            </div>
         </div>
     </main>
 
@@ -325,61 +397,81 @@
         // Запуск кода после загрузки DOM
         document.addEventListener('DOMContentLoaded', () => {
             const loadNewsBtn = document.getElementById('loadNews');
+            const refreshNewsBtn = document.getElementById('refreshNews');
             const newsFrame = document.getElementById('newsFrame');
-            const loadingMessage = document.getElementById('loadingMessage');
+
+            // Функция показа прогресс-бара
+            const showProgressBar = (callback) => {
+                const overlay = document.getElementById('loadingOverlay');
+                const progressBar = document.getElementById('progressBar');
+                const progressPercent = document.getElementById('progressPercent');
+
+                overlay.style.display = 'flex';
+                progressBar.style.width = '0%';
+                progressPercent.textContent = '0%';
+
+                let progress = 0;
+                const duration = 2500; // 2.5 секунды
+                const interval = 50;   // обновление каждые 50мс
+                const increment = (interval / duration) * 100;
+
+                const progressInterval = setInterval(() => {
+                    progress += increment;
+                    if (progress >= 100) {
+                        progress = 100;
+                        clearInterval(progressInterval);
+                        progressBar.style.width = '100%';
+                        progressPercent.textContent = '100%';
+                        setTimeout(() => {
+                            overlay.style.display = 'none';
+                            progressBar.style.width = '0%';
+                            progressPercent.textContent = '0%';
+                            if (callback) callback();
+                        }, 300);
+                    } else {
+                        progressBar.style.width = progress + '%';
+                        progressPercent.textContent = Math.round(progress) + '%';
+                    }
+                }, interval);
+            };
 
             // Функция для загрузки новостей
             const loadNews = () => {
-                showLoadingMessage(true);
-                try {
-                    newsFrame.src = "https://news.startpage.co.il/russian/#";
-                    newsFrame.onload = () => {
-                        showLoadingMessage(false); // Скрыть сообщение после загрузки
-                    };
-                } catch (error) {
-                    console.error('Ошибка загрузки новостей:', error);
-                    alert('Не удалось загрузить новости. Попробуйте позже.');
-                    showLoadingMessage(false);
-                }
+                showProgressBar(() => {
+                    try {
+                        newsFrame.src = "https://news.startpage.co.il/russian/#";
+                    } catch (error) {
+                        console.error('Ошибка загрузки новостей:', error);
+                        alert('Не удалось загрузить новости. Попробуйте позже.');
+                    }
+                });
             };
-
-            // Функция для отображения/скрытия сообщения о загрузке
-            const showLoadingMessage = (isVisible) => {
-                loadingMessage.style.display = isVisible ? 'block' : 'none';
-            };
-
-            // Добавление обработчика событий на кнопку
-            loadNewsBtn.addEventListener('click', loadNews);
-
-            const refreshNewsBtn = document.getElementById('refreshNews');
 
             // Функция для обновления новостей
             const refreshNews = () => {
-                showLoadingMessage(true);
-                try {
-                    // Перезагружаем iframe, добавляя timestamp для избежания кэширования
-                    const currentSrc = newsFrame.src;
-                    newsFrame.src = '';
-                    setTimeout(() => {
-                        newsFrame.src = currentSrc || "https://news.startpage.co.il/russian/#";
-                    }, 10);
-
-                    newsFrame.onload = () => {
-                        showLoadingMessage(false);
-                    };
-                } catch (error) {
-                    console.error('Ошибка обновления новостей:', error);
-                    alert('Не удалось обновить новости. Попробуйте позже.');
-                    showLoadingMessage(false);
-                }
+                showProgressBar(() => {
+                    try {
+                        const currentSrc = newsFrame.src;
+                        newsFrame.src = '';
+                        setTimeout(() => {
+                            newsFrame.src = currentSrc || "https://news.startpage.co.il/russian/#";
+                        }, 10);
+                    } catch (error) {
+                        console.error('Ошибка обновления новостей:', error);
+                        alert('Не удалось обновить новости. Попробуйте позже.');
+                    }
+                });
             };
 
-            // Добавление обработчика событий на кнопку обновления
+            // Добавление обработчиков событий на кнопки
+            loadNewsBtn.addEventListener('click', loadNews);
             refreshNewsBtn.addEventListener('click', refreshNews);
 
             // Автоматическое обновление страницы каждые 5 минут
             setInterval(() => {
-                location.reload();
+                showProgressBar(() => {
+                    location.reload();
+                });
             }, 300000); // 5 минут = 300000 мс
         });
     </script>
